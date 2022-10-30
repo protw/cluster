@@ -1,0 +1,8 @@
+pandas
+flask
+pygeodesy
+folium
+pywebio
+pyyaml
+sklearn
+seaborn

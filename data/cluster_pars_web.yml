@@ -1,0 +1,58 @@
+# Розборка тексту на координати
+coord_format: # radio inline
+  name: coord_format
+  label: Формат координат в тексті
+  options:
+    - "46.7373, 32.8128"
+    - "46,7373 / 32,8128"
+    - "46.7373 32.8128"
+  value: "46.7373, 32.8128"
+  inline: True
+lat_lon_order: # radio inline
+  name: lat_lon_order
+  label: Порядок координат у тексті
+  options:
+    - LatLon
+    - LonLat
+  value: LatLon
+  inline: True
+text: # textarea
+  label: Вхідний текст
+  name: text
+  rows: 3
+  placeholder: Вставити вхідний текст сюди...
+  help_text: Текст містить координати щонайменше 2 гео точок. Для проби скопіюйте текст із закладки 'Приклад'
+# Кластеризація точок
+epsilon: # slider
+  name: epsilon
+  label: Радіус сусідства
+  value: 30
+  min_value: 10
+  max_value: 100
+  step: 10
+#  type: NUMBER -- ERROR!
+  help_text: Радіус (м), в межах якого точки вважаються сусідами
+min_samples: # slider
+  name: min_samples
+  label: Мінімальний розмір кластера
+  value: 3
+  min_value: 2
+  max_value: 5
+  step: 1
+  help_text: Мінімальна кількість точок для формування кластера 
+# Відображення
+perctl: # slider
+  name: perctl
+  label: Персентиль
+  value: 75
+  min_value: 60
+  max_value: 90
+  step: 15
+  help_text: Для розрахунку діаметру кола (навколо центральної точки), яке вміщує зазначену частину точок (у %) 
+zoom_start: # slider
+  name: zoom_start
+  label: Стартовий зум мапи
+  value: 17
+  min_value: 11
+  max_value: 18
+  step: 1
