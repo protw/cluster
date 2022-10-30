@@ -60,9 +60,12 @@
 - [ ] протестувати алгоритм кластеризації на предмет критичних ситуацій (run time errors), поставити заглушки і генерування повідомлень, забезпечення стійкості застосунку, централізована обробка повідомлень про критичні ситуації і генерування спливаючого вікна (pywebio toast або popup)
 - [ ] ускладнити парсинг: витягувати опис цілі з тексту: (ліворуч, праворуч, ціль в окремому рядку)
 - [ ] розгорнути Докер контейнер на зовнішньому хостингу
+  - [встановити Heroku на компі](https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli), залогінитись і набрати команду `heroku stack:set container -a cluster-b`, де останньою зазначена назва застосунку
+
 
 #### Корисні посилання
 
 - [Qingkai's Blog: Clustering with DBSCAN](http://qingkaikong.blogspot.com/2016/08/clustering-with-dbscan.html)
 - [Folium and Geopandas: FeatureGroup for categorial data | Florian Neukirchen](https://www.riannek.de/2022/folium-featuregroup-categorial-data/)
 - [Heroku + Docker in 10 Minutes. | by Kay Jan Wong | Towards Data Science](https://towardsdatascience.com/heroku-docker-in-10-minutes-f4329c4fd72f)
+- [How to Build and Deploy a Container in Heroku Using a heroku.yml File - YouTube](https://www.youtube.com/watch?v=Z9SJTEC0wEs)

@@ -57,12 +57,15 @@ You can also set the starting scale of the map display here.
 
 #### TODO
 
-- test the clustering algorithm for critical situations (run time errors), install stubs and generate error messages, ensure the stability of the application, centrally process messages about critical situations and generate a pop-up window (pywebio toast or popup)
-- complicate parsing: extract the description of the point from the text: (left, right, target in a separate line)
-- deploy a Docker container on external hosting
+- [ ] test the clustering algorithm for critical situations (run time errors), install stubs and generate error messages, ensure the stability of the application, centrally process messages about critical situations and generate a pop-up window (pywebio toast or popup)
+- [ ] complicate parsing: extract the description of the point from the text: (left, right, target in a separate line)
+- [ ] deploy a Docker container on external hosting
+  - [install Heroku at the computer](https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli), login and enter the following command from CLI `heroku stack:set container -a cluster-b`, where the latter is the app name
+
 
 #### Useful links
 
 - [Qingkai's Blog: Clustering with DBSCAN](http://qingkaikong.blogspot.com/2016/08/clustering-with-dbscan.html)
 - [Folium and Geopandas: FeatureGroup for categorial data | Florian Neukirchen](https://www.riannek.de/2022/folium-featuregroup-categorial-data/)
 - [Heroku + Docker in 10 Minutes. | by Kay Jan Wong | Towards Data Science](https://towardsdatascience.com/heroku-docker-in-10-minutes-f4329c4fd72f)
+- [How to Build and Deploy a Container in Heroku Using a heroku.yml File - YouTube](https://www.youtube.com/watch?v=Z9SJTEC0wEs)
