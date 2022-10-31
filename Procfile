@@ -1,0 +1,1 @@
+web: python cluster_web.py --port=$PORT

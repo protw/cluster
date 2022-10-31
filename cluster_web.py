@@ -160,4 +160,4 @@ def app():
     disp_pars()
 
 if __name__ == '__main__':
-    start_server(app, port=8080, debug=True, websocket_ping_interval=30)
+    start_server(app, port=8080, debug=True)
