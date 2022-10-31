@@ -93,11 +93,22 @@ def disp_res():
 
     ## Display text report into scope 'text'
     with use_scope('text', clear=True):
+        put_markdown('## ПАРАМЕТРИ')
+        msg_pars = [
+            f"Формат координат: `{pin.coord_format}`",
+            f"Порядок координат: `{pin.lat_lon_order}`",
+            f"Радіус сусідства: `{pin.epsilon}` м",
+            f"Мін. кількість точок у кластері: `{pin.min_samples}`" ]
+        put_markdown(', '.join(msg_pars[:2]))
+        put_markdown(', '.join(msg_pars[2:]))
+
         put_markdown('## РЕЗУЛЬТАТ')
-        msg_stats = f"Всього виявлено точок: `{group_stats['n_pnts']}`, " + \
-            f"кластерів: `{group_stats['n_clust']}`, " + \
-            f"точок поза кластерами: `{group_stats['n_outlier']}`"
-        put_markdown(msg_stats)
+        msg_stats = [
+            f"Всього виявлено точок: `{group_stats['n_pnts']}`",
+            f"кластерів: `{group_stats['n_clust']}`"
+            f"точок поза кластерами: `{group_stats['n_outlier']}`" ]
+        put_markdown(', '.join(msg_stats))
+
         for group_name, group_data in grouped:
             group_head = f'### Поза кластером' if group_name == -1 \
                 else f'### Кластер {group_name}'

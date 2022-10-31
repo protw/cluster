@@ -1,0 +1,21 @@
+#Корисні команди Heroku
+
+heroku create -a clusterb
+
+## OR for existing project
+heroku git:remote -a clusterb
+
+# Change resourse to docker
+heroku stack:set container -a clusterb
+
+# Check 
+git remote -v
+
+# build container
+git push heroku master
+
+https://clusterb.herokuapp.com/ | https://git.heroku.com/clusterb.git
+
+# display logs
+heroku logs --tail
+
