@@ -69,3 +69,4 @@ You can also set the starting scale of the map display here.
 - [Folium and Geopandas: FeatureGroup for categorial data | Florian Neukirchen](https://www.riannek.de/2022/folium-featuregroup-categorial-data/)
 - [Heroku + Docker in 10 Minutes. | by Kay Jan Wong | Towards Data Science](https://towardsdatascience.com/heroku-docker-in-10-minutes-f4329c4fd72f)
 - [How to Build and Deploy a Container in Heroku Using a heroku.yml File - YouTube](https://www.youtube.com/watch?v=Z9SJTEC0wEs)
+- [How to Deploy a Python Flask App on Heroku Using Docker - DEV Community 👩‍💻👨‍💻](https://dev.to/ejach/how-to-deploy-a-python-flask-app-on-heroku-using-docker-mpc)
