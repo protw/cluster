@@ -87,10 +87,14 @@ def center(pnts, perctl=75):
 
     return cntr, sz_pnts
 
-def add_marker(f_groups, lat, lon, html, tooltip, color):
-    # Add markers to last FeatureGroup
+def html2popup(html):
     iframe = folium.IFrame(html=html, width=200, height=130)
     popup = folium.Popup(iframe, max_width=350)
+    return popup
+
+def add_marker(f_groups, lat, lon, html, tooltip, color):
+    # Add markers to last FeatureGroup
+    popup = html2popup(html)
     folium.CircleMarker(
         location=[lat, lon],
         radius=5,
@@ -149,7 +153,7 @@ def build_groups_on_map(pnts, m, perctl):
         n_pnts_clust = len(group_data)
         cntr_group, sz = center(group_data[['Lat','Lon']])
 
-        color = 'red'
+        color_c = 'red'
         lat = cntr_group[0]
         lon = cntr_group[1]
         tooltip = f'Класт: {group_name} / Кільк: {n_pnts_clust}'
@@ -162,7 +166,16 @@ def build_groups_on_map(pnts, m, perctl):
             <b>Ш,Д:</b> {lat:.6f}, {lon:.6f}</p>
             </small>
             """
-        add_marker(f_groups, lat, lon, html, tooltip, color)
+        add_marker(f_groups, lat, lon, html, tooltip, color_c)
+
+        # побудувати коло за розміром персентиля
+        popup = html2popup(html)
+        folium.Circle(cntr_group, 
+            radius=sz/2.,
+            popup=popup,
+            tooltip=tooltip,
+            color=color,
+            dash_array='6').add_to(f_groups[-1])
 
         # Add last featureGroup to Map
         f_groups[-1].add_to(m)
