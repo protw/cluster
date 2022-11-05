@@ -172,7 +172,7 @@ def build_groups_on_map(pnts, m, perctl):
         popup = html2popup(html)
         folium.Circle(cntr_group, 
             radius=sz/2.,
-            popup=popup,
+            html=html,
             tooltip=tooltip,
             color=color,
             dash_array='6').add_to(f_groups[-1])

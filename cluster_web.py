@@ -105,7 +105,7 @@ def disp_res():
         put_markdown('## РЕЗУЛЬТАТ')
         msg_stats = [
             f"Всього виявлено точок: `{group_stats['n_pnts']}`",
-            f"кластерів: `{group_stats['n_clust']}`"
+            f"кластерів: `{group_stats['n_clust']}`",
             f"точок поза кластерами: `{group_stats['n_outlier']}`" ]
         put_markdown(', '.join(msg_stats))
 
