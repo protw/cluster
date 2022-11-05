@@ -87,27 +87,26 @@ def center(pnts, perctl=75):
 
     return cntr, sz_pnts
 
-def html2popup(html):
-    iframe = folium.IFrame(html=html, width=200, height=130)
-    popup = folium.Popup(iframe, max_width=350)
-    return popup
-
-def add_marker(f_groups, lat, lon, html, tooltip, color):
-    # Add markers to last FeatureGroup
-    popup = html2popup(html)
-    folium.CircleMarker(
-        location=[lat, lon],
-        radius=5,
-        popup=popup,
-        tooltip=tooltip,
-        fill_color=color,
-        stroke = False, 
-        fill_opacity = 1,
-    ).add_to(f_groups[-1])
-
 def build_groups_on_map(pnts, m, perctl):
     ## Побудувати групи точок на мапі з контролем шарів
     ## https://www.riannek.de/2022/folium-featuregroup-categorial-data/
+    def html2popup(): #html):
+        iframe = folium.IFrame(html=html, width=200, height=130)
+        popup = folium.Popup(iframe, max_width=350)
+        return popup
+
+    def add_marker(): #f_groups, lat, lon, html, tooltip, color):
+        # Add markers to last FeatureGroup
+        popup = html2popup() #html)
+        folium.CircleMarker(
+            location=[lat, lon],
+            radius=5,
+            popup=popup,
+            tooltip=tooltip,
+            fill_color=color,
+            stroke = False, 
+            fill_opacity = 1,
+        ).add_to(f_groups[-1])
 
     f_groups = []
 
@@ -146,7 +145,7 @@ def build_groups_on_map(pnts, m, perctl):
                 <b>Ш,Д:</b> {lat:.6f}, {lon:.6f}</p>
                 </small>
                 """
-            add_marker(f_groups, lat, lon, html, tooltip, color)
+            add_marker() #f_groups, lat, lon, html, tooltip, color)
     
         # Формуємо для кластеру маркер його центральної точки і 
         # додаємо до групи FeatureGroup
@@ -166,10 +165,10 @@ def build_groups_on_map(pnts, m, perctl):
             <b>Ш,Д:</b> {lat:.6f}, {lon:.6f}</p>
             </small>
             """
-        add_marker(f_groups, lat, lon, html, tooltip, color_c)
+        add_marker() #f_groups, lat, lon, html, tooltip, color_c)
 
         # побудувати коло за розміром персентиля
-        popup = html2popup(html)
+        popup = html2popup() #html)
         folium.Circle(cntr_group, 
             radius=sz/2.,
             html=html,
