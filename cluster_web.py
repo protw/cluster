@@ -11,7 +11,7 @@ from pywebio          import config
 from pywebio.platform.flask import start_server
 
 ## Власні методи
-from cluster_util_web import load_resourses, cluster_main, center
+from cluster_util     import load_resourses, cluster_main, center
 
 in_pars, cluster_help_md, example_text, logo_img = load_resourses()
 

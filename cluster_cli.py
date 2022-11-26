@@ -1,7 +1,7 @@
 import webbrowser
 
 ## Власні методи
-from cluster_util_web import load_resourses, cluster_main
+from cluster_util import load_resourses, cluster_main
 
 in_pars, _, _, _ = load_resourses()
 
