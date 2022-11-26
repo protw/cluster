@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+import yaml
 import re
 import pandas as pd
 import numpy as np
@@ -7,6 +9,30 @@ from sklearn.cluster import DBSCAN
 import folium
 from pygeodesy.sphericalNvector import meanOf, LatLon
 import seaborn as sns
+
+'''Loading the following resources into variables:
+   - in_pars         - UI specification of input parameters, yaml -> dict
+   - cluster_help_md - md-help-text shown at the web page
+   - example_text    - example of textual input data
+   - logo_img        - logo image used at the web page
+'''
+def load_resourses():
+    curdir = os.path.realpath(os.path.dirname(__file__))
+
+    yml_pars_file = curdir + '/data/cluster_pars_web.yml'
+    with open(yml_pars_file, 'r') as f:
+        in_pars = yaml.load(f, Loader=yaml.FullLoader)
+    readme_file = curdir + '/data/cluster_readme.md'
+    with open(readme_file, 'r') as f:
+        cluster_help_md = f.read()
+    example_file = curdir + '/data/cluster_data.yml'
+    with open(example_file, 'r') as f:
+        example_text = f.read()
+    logo_img_file = curdir + '/data/cluster_logo.png'
+    with open(logo_img_file, 'rb') as f:
+        logo_img = f.read()
+
+    return in_pars, cluster_help_md, example_text, logo_img
 
 '''Розібрати вхідний текст - витягнути пари гео координат з тексту і
    створити список пар координат типу float.
@@ -17,26 +43,32 @@ import seaborn as sns
          1 - десяткова кома, слеш - "46,737364 / 32,812807";
          2 - десяткова кома, пробіл - "46,737364 32,812807";
      'lat_lon_order' - 'LatLon' (default) або 'LonLat'.
-   Повертає список пар координат типу float, порядок коорд [Lat,Lon].'''
-
+   Повертає список пар координат типу float, порядок коорд [Lat,Lon].
+'''
 def parse_text(in_pars, pin):
     def get_coord_format_id(in_pars, coord_format):
         coord_format_options = in_pars['coord_format']['options']
         coord_format_id = coord_format_options.index(coord_format)
         return coord_format_id
-    format_id = get_coord_format_id(in_pars, pin.coord_format)
-    text = pin.text
-    lat_lon_order = pin.lat_lon_order
+    format_id = get_coord_format_id(in_pars, pin['coord_format'])
+    text = pin['text']
+    lat_lon_order = pin['lat_lon_order']
+
+    df = text_parser(text, format_id, lat_lon_order)
+
+    return df
+
+def text_parser(text, mask_id, lat_lon_order):
     format_masks = [
         r'(\d{1,3}\.\d+)\s*\,\s*(\d{1,3}\.\d+)', # 46.737364, 32.812807
         r'(\d{1,3}\,\d+)\s*/\s*(\d{1,3}\,\d+)',  # 46,737364 / 32,812807
         r'(\d{1,3}\.\d+)\s+(\d{1,3}\.\d+)'       # 46.7373 32.8128
     ]
-    mask = format_masks[format_id]
+    mask = format_masks[mask_id]
     # Повертає список пар (кортежей) координат типу str
     st = re.findall(mask, text)
     # Міняє кому на крапку в кожному елементі
-    if format_id == 1:
+    if mask_id == 1:
         sl = [[c.replace(',','.') for c in p] for p in st]
     else:
         sl = [[c for c in p] for p in st]
@@ -69,9 +101,9 @@ def clustering(pnts, epsilon=0.05, min_samples=3):
 
 def center(pnts, perctl=75):
     ## Знайти центроїд групи точок 'pnts'
-    n_pnts = len(pnts)
+    n_pnts = pnts.shape[0]
     if n_pnts == 1:
-        return pnts, None
+        return [float(pnts.Lat), float(pnts.Lon)], 1
     pnts_LL = [LatLon(p['Lat'],p['Lon']) for _, p in pnts.iterrows()]
     cntr = meanOf(pnts_LL)
     
@@ -149,10 +181,10 @@ def build_groups_on_map(pnts, m, perctl):
     
         # Формуємо для кластеру маркер його центральної точки і 
         # додаємо до групи FeatureGroup
-        n_pnts_clust = len(group_data)
+        n_pnts_clust = group_data.shape[0]
         cntr_group, sz = center(group_data[['Lat','Lon']])
 
-        color_c = 'red'
+        color = 'red'
         lat = cntr_group[0]
         lon = cntr_group[1]
         tooltip = f'Класт: {group_name} / Кільк: {n_pnts_clust}'
@@ -168,7 +200,6 @@ def build_groups_on_map(pnts, m, perctl):
         add_marker() #f_groups, lat, lon, html, tooltip, color_c)
 
         # побудувати коло за розміром персентиля
-        popup = html2popup() #html)
         folium.Circle(cntr_group, 
             radius=sz/2.,
             html=html,
@@ -182,3 +213,42 @@ def build_groups_on_map(pnts, m, perctl):
     folium.LayerControl(collapsed=False).add_to(m)
 
     return m, grouped, group_stats
+
+'''Core tasks are done here:
+   - parsing input text and extracting coordinates
+   - clustering the set of geo points
+   - building groups of cluster points in map object
+'''
+def cluster_main(in_pars, pin):
+    epsilon, min_samples, perctl, zoom_start = \
+        pin['epsilon'], pin['min_samples'], pin['perctl'], pin['zoom_start']
+
+    epsilon /= 1000 # from m to km
+
+    pnts = parse_text(in_pars, pin)
+
+    group_stats = {}
+    if len(pnts) < 2:
+        group_stats['error'] = 'ПРОБЛЕМА: має бути не менше 2 точок!'
+        return None, None, group_stats
+
+    '''Clustering
+       pnts.columns == ['Lat', 'Lon', 'descr', 'cluster_label']
+       cluster_labels == -1 means outlayers (i.e. out cluster)
+    '''
+    pnts, _ = clustering(pnts, epsilon=epsilon, 
+                         min_samples=min_samples)
+
+    cntr_all_pnts, _ = center(pnts)
+
+    ## Initiating the map object
+    m = folium.Map(location=cntr_all_pnts, zoom_start=zoom_start, 
+                   tiles='openstreetmap',control_scale=True)
+
+    '''Buils groups of points with layer control
+       https://www.riannek.de/2022/folium-featuregroup-categorial-data/ 
+    '''
+    m, grouped, group_stats = build_groups_on_map(pnts, m, perctl)
+    
+    return m, grouped, group_stats
+

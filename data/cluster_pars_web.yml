@@ -28,7 +28,7 @@ epsilon: # slider
   label: Радіус сусідства
   value: 30
   min_value: 10
-  max_value: 100
+  max_value: 300
   step: 10
 #  type: NUMBER -- ERROR!
   help_text: Радіус (м), в межах якого точки вважаються сусідами

@@ -1,8 +1,8 @@
 pandas
 flask
-pygeodesy
-folium
-pywebio
 pyyaml
-sklearn
 seaborn
+pywebio
+folium
+pygeodesy
+scikit-learn
