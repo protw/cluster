@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 import folium
+from folium import plugins
 from pygeodesy.sphericalNvector import meanOf, LatLon
 import seaborn as sns
 
@@ -211,6 +212,7 @@ def build_groups_on_map(pnts, m, perctl):
         f_groups[-1].add_to(m)
 
     folium.LayerControl(collapsed=False).add_to(m)
+    plugins.Fullscreen().add_to(m)
 
     return m, grouped, group_stats
 
